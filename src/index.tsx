@@ -2,47 +2,48 @@ import React, { Component, ReactNode, CSSProperties } from 'react';
 import PropTypes from 'prop-types';
 
 interface ReactAudioPlayerProps {
-  autoPlay?: boolean
-  children?: ReactNode
-  className?: string
-  controls?: boolean
-  controlsList?: string
-  crossOrigin?: string
-  id?: string
-  listenInterval?: number
-  loop?: boolean
-  muted?: boolean
-  onAbort?: (e: Event) => void
-  onCanPlay?: (e: Event) => void
-  onCanPlayThrough?: (e: Event) => void
-  onEnded?: (e: Event) => void
-  onError?: (e: Event) => void
-  onListen?: (time: number) => void
-  onLoadedMetadata?: (e: Event) => void
-  onPause?: (e: Event) => void
-  onPlay?: (e: Event) => void
-  onSeeked?: (e: Event) => void
-  onVolumeChanged?: (e: Event) => void
-  preload?: '' | 'none' | 'metadata' | 'auto'
-  src?: string, // Not required b/c can use <source>
-  style?: CSSProperties
-  title?: string
-  volume: number
+  autoPlay?: boolean;
+  children?: ReactNode;
+  className?: string;
+  controls?: boolean;
+  controlsList?: string;
+  crossOrigin?: string;
+  currentTime?: number;
+  id?: string;
+  listenInterval?: number;
+  loop?: boolean;
+  muted?: boolean;
+  onAbort?: (e: Event) => void;
+  onCanPlay?: (e: Event) => void;
+  onCanPlayThrough?: (e: Event) => void;
+  onEnded?: (e: Event) => void;
+  onError?: (e: Event) => void;
+  onListen?: (time: number) => void;
+  onLoadedMetadata?: (e: Event) => void;
+  onPause?: (e: Event) => void;
+  onPlay?: (e: Event) => void;
+  onSeeked?: (e: Event) => void;
+  onVolumeChanged?: (e: Event) => void;
+  preload?: '' | 'none' | 'metadata' | 'auto';
+  src?: string; // Not required b/c can use <source>
+  style?: CSSProperties;
+  title?: string;
+  volume: number;
 }
 
 interface ConditionalProps {
-  controlsList?: string
-  [key: string]: any
+  controlsList?: string;
+  [key: string]: any;
 }
 
 class ReactAudioPlayer extends Component<ReactAudioPlayerProps> {
-  static propTypes: Object
+  static propTypes: Object;
 
-  static defaultProps: ReactAudioPlayerProps
+  static defaultProps: ReactAudioPlayerProps;
 
   audioEl = React.createRef<HTMLAudioElement>();
 
-  listenTracker?: number
+  listenTracker?: number;
 
   onError = (e: Event) => this.props.onError?.(e);
   onCanPlay = (e: Event) => this.props.onCanPlay?.(e);
@@ -50,28 +51,28 @@ class ReactAudioPlayer extends Component<ReactAudioPlayerProps> {
   onPlay = (e: Event) => {
     this.setListenTrack();
     this.props.onPlay?.(e);
-  }
+  };
   onAbort = (e: Event) => {
     this.clearListenTrack();
     this.props.onAbort?.(e);
-  }
+  };
   onEnded = (e: Event) => {
     this.clearListenTrack();
     this.props.onEnded?.(e);
-  }
+  };
   onPause = (e: Event) => {
     this.clearListenTrack();
     this.props.onPause?.(e);
-  }
+  };
   onSeeked = (e: Event) => {
     this.props.onSeeked?.(e);
-  }
+  };
   onLoadedMetadata = (e: Event) => {
     this.props.onLoadedMetadata?.(e);
-  }
+  };
   onVolumeChanged = (e: Event) => {
     this.props.onVolumeChanged?.(e);
-  }
+  };
 
   componentDidMount() {
     const audio = this.audioEl.current;
@@ -153,7 +154,8 @@ class ReactAudioPlayer extends Component<ReactAudioPlayerProps> {
     if (!this.listenTracker) {
       const listenInterval = this.props.listenInterval;
       this.listenTracker = window.setInterval(() => {
-        this.audioEl.current && this.props.onListen?.(this.audioEl.current.currentTime);
+        this.audioEl.current &&
+          this.props.onListen?.(this.audioEl.current.currentTime);
       }, listenInterval);
     }
   }
@@ -164,7 +166,11 @@ class ReactAudioPlayer extends Component<ReactAudioPlayerProps> {
    */
   updateVolume(volume: number) {
     const audio = this.audioEl.current;
-    if (audio !== null && typeof volume === 'number' && volume !== audio?.volume) {
+    if (
+      audio !== null &&
+      typeof volume === 'number' &&
+      volume !== audio?.volume
+    ) {
       audio.volume = volume;
     }
   }
@@ -181,7 +187,9 @@ class ReactAudioPlayer extends Component<ReactAudioPlayerProps> {
 
   render() {
     const incompatibilityMessage = this.props.children || (
-      <p>Your browser does not support the <code>audio</code> element.</p>
+      <p>
+        Your browser does not support the <code>audio</code> element.
+      </p>
     );
 
     // Set controls to be true by default unless explicity stated otherwise
@@ -202,6 +210,7 @@ class ReactAudioPlayer extends Component<ReactAudioPlayerProps> {
         className={`react-audio-player ${this.props.className}`}
         controls={controls}
         crossOrigin={this.props.crossOrigin}
+        currentTime={this.props.currentTime}
         id={this.props.id}
         loop={this.props.loop}
         muted={this.props.muted}

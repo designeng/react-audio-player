@@ -8,7 +8,7 @@ interface ReactAudioPlayerProps {
   controls?: boolean;
   controlsList?: string;
   crossOrigin?: string;
-  currentTime?: string;
+  currentTime?: number;
   id?: string;
   listenInterval?: number;
   loop?: boolean;
@@ -110,9 +110,7 @@ class ReactAudioPlayer extends Component<ReactAudioPlayerProps> {
 
     audio.onprogress = () => {
       if (audio.currentTime == 0) {
-        audio.currentTime = this.props.currentTime
-          ? parseFloat(this.props.currentTime)
-          : 0;
+        audio.currentTime = this.props.currentTime ? this.props.currentTime : 0;
       }
     };
   }

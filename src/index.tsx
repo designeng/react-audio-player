@@ -8,7 +8,7 @@ interface ReactAudioPlayerProps {
   controls?: boolean;
   controlsList?: string;
   crossOrigin?: string;
-  currentTime?: number;
+  currentTime?: string;
   id?: string;
   listenInterval?: number;
   loop?: boolean;
@@ -107,6 +107,14 @@ class ReactAudioPlayer extends Component<ReactAudioPlayerProps> {
     audio.addEventListener('loadedmetadata', this.onLoadedMetadata);
 
     audio.addEventListener('volumechange', this.onVolumeChanged);
+
+    audio.onprogress = () => {
+      if (audio.currentTime == 0) {
+        audio.currentTime = this.props.currentTime
+          ? parseFloat(this.props.currentTime)
+          : 0;
+      }
+    };
   }
 
   // Remove all event listeners
@@ -210,7 +218,6 @@ class ReactAudioPlayer extends Component<ReactAudioPlayerProps> {
         className={`react-audio-player ${this.props.className}`}
         controls={controls}
         crossOrigin={this.props.crossOrigin}
-        currentTime={this.props.currentTime}
         id={this.props.id}
         loop={this.props.loop}
         muted={this.props.muted}

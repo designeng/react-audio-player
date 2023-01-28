@@ -1,11 +1,36 @@
-import React from 'react';
+import React, { createRef, useCallback } from 'react';
+import { useEffect } from 'react';
 import ReactDOM from 'react-dom';
-import ReactAudioPlayer from 'react-audio-player';
+import ReactAudioPlayer from '../../dist/bundle';
 
-ReactDOM.render(
-  <ReactAudioPlayer
-    src="/files/George_Gershwin_playing_Rhapsody_in_Blue.ogg"
-    controls
-  />,
-  document.querySelector('.app'),
-);
+const App = () => {
+  const player = createRef(null);
+
+  useEffect(() => {
+    player.current?.audioEl?.current.play();
+  });
+
+  const onPlay = useCallback(() => {
+    player.current.audioEl.current.play();
+  }, []);
+
+  const onStop = useCallback(() => {
+    player.current.audioEl.current.pause();
+  }, []);
+
+  return (
+    <>
+      <ReactAudioPlayer
+        src="/files/1.mp3"
+        controls
+        currentTime={100}
+        autoPlay={true}
+        ref={player}
+      />
+      <button onClick={onPlay}>Play</button>
+      <button onClick={onStop}>Stop</button>
+    </>
+  );
+};
+
+ReactDOM.render(<App />, document.querySelector('.app'));
